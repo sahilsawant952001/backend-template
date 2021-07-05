@@ -34,9 +34,19 @@ exports.auth_signup = (req, res, next) => {
                         })
                     }else{
                         if(data!==null || data!==undefined){
+                            const token = jwt.sign(
+                                {
+                                    email:email
+                                },
+                                process.env.JWT_KEY,
+                                {
+                                    expiresIn:'1h'
+                                }
+                            )
                             res.send({
                                 success:true,
-                                message:'signup successfull'
+                                message:'signup successfull',
+                                authToken:token
                             })
                         }
                     }

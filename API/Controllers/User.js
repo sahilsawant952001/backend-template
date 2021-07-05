@@ -21,14 +21,14 @@ exports.user_change_password = (req,res) => {
                             if(err3){
                                 res.send({
                                     success:false,
-                                    message:'failed to change password 1'
+                                    message:'failed to change password'
                                 });
                             }else{
                                 User.updateOne({email:email},{password:hash},(err2,data2) => {
                                     if(err2){
                                         res.send({
                                             success:false,
-                                            message:'failed to change password 2'
+                                            message:'failed to change password'
                                         });
                                     }else{
                                         if(data2.nModified===1){
@@ -39,7 +39,7 @@ exports.user_change_password = (req,res) => {
                                         }else{
                                             res.send({
                                                 success:false,
-                                                message:'failed to change password 3'
+                                                message:'failed to change password'
                                             });
                                         }
                                     }
@@ -49,14 +49,14 @@ exports.user_change_password = (req,res) => {
                     }else{
                         res.send({
                             success:false,
-                            message:'failed to change password 4'
+                            message:'old password is incorrect'
                         });
                     }
                 });
             }else{
                 res.send({
                     success:false,
-                    message:'failed to change password 5'
+                    message:'failed to change password'
                 });
             }
         }
