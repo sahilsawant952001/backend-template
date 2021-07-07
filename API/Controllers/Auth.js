@@ -10,6 +10,7 @@ exports.auth_signup = (req, res, next) => {
     const password = req.body.password;
 
     const q = `select * from users where email = '${email}';`;
+
     con.query(q,(err,results) => {
         if(err){
             res.send({
