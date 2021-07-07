@@ -1,5 +1,5 @@
-const User = require("../Models/User");
 const bcrypt = require('bcrypt');
+const con = require('../mysql');
 
 exports.user_change_password = (req,res) => {
     
@@ -7,15 +7,17 @@ exports.user_change_password = (req,res) => {
     const password = req.body.password;
     const newPassword = req.body.newPassword;
 
-    User.findOne({email:email},(err,data) => {
+    const q = `select * from users where email = '${email}';`
+
+    con.query(q,(err,results) => {
         if(err){
             res.send({
                 success:false,
                 message:'error occured'
             })
         }else{
-            if(data!==null || data!==undefined){
-                bcrypt.compare(password, data.password, function(err, result) {  
+            if(results.length!==0){
+                bcrypt.compare(password, results[0].password, function(err, result) {  
                     if(result===true){
                         bcrypt.hash(newPassword,3,(err3,hash) => {
                             if(err3){
@@ -24,14 +26,15 @@ exports.user_change_password = (req,res) => {
                                     message:'failed to change password'
                                 });
                             }else{
-                                User.updateOne({email:email},{password:hash},(err2,data2) => {
-                                    if(err2){
+                                const q2 = `update users set password = '${hash}' where email = '${email}'`;
+                                con.query(q2,(err,results) => {
+                                    if(err){
                                         res.send({
                                             success:false,
                                             message:'failed to change password'
                                         });
                                     }else{
-                                        if(data2.nModified===1){
+                                        if(results.changedRows>0){
                                             res.send({
                                                 success:true,
                                                 message:'password changed successfully'
